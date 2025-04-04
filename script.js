@@ -1,109 +1,108 @@
 const investments = [
-    {
-      name: "Lemonade Stand",
-      description: "Start small. Squeeze every cent.",
-      image: "img/lemonade.png"
-    },
-    {
-      name: "Garage Sale Empire",
-      description: "Sell grandma’s junk for profit.",
-      image: "img/garage.png"
-    },
-    {
-      name: "Mom’s Basement Startup",
-      description: "Funded by ramen and ambition.",
-      image: "img/startup.png"
-    },
-    {
-      name: "Local Pizza Chain",
-      description: "Grease the wheels of commerce.",
-      image: "img/pizza.png"
-    },
-    {
-      name: "Neighborhood Crypto Miner",
-      description: "Melt GPUs for passive income.",
-      image: "img/crypto.png"
-    },
-    {
-      name: "Influencer Brand Deal Agency",
-      description: "Turn clout into cash.",
-      image: "img/influencer.png"
-    },
-    {
-      name: "Regional Fast Food Empire",
-      description: "Have it your way — everywhere.",
-      image: "img/fastfood.png"
-    },
-    {
-      name: "National Tech Conglomerate",
-      description: "Owns three apps and your data.",
-      image: "img/tech.png"
-    },
-    {
-      name: "Offshore Investment Scheme",
-      description: "Totally legit. Promise.",
-      image: "img/offshore.png"
-    },
-    {
-      name: "Artificial Intelligence Mega-Lab",
-      description: "Automate the world (and profits).",
-      image: "img/ai.png"
-    },
-    {
-      name: "World Bank Acquisition",
-      description: "Set the rates. Rule the game.",
-      image: "img/bank.png"
-    },
-    {
-      name: "Interplanetary Mining Corp",
-      description: "Mars has more than just dust.",
-      image: "img/marsmine.png"
-    },
-    {
-      name: "Time-Travel Real Estate Trust",
-      description: "Buy in 1890. Sell in 2200.",
-      image: "img/timetravel.png"
-    },
-    {
-      name: "Galactic Stock Exchange",
-      description: "Trade across the stars.",
-      image: "img/galaxy.png"
-    },
-    {
-      name: "Multiverse Monopoly Machine",
-      description: "Infinite selves. Infinite revenue.",
-      image: "img/multiverse.png"
-    },
-    {
-      name: "God Mode Capital",
-      description: "Owns everything. Clicks itself.",
-      image: "img/godmode.png"
-    }
-  ];
-  
-  const container = document.getElementById('investments');
-  
-  investments.forEach((inv, index) => {
-    const card = document.createElement('div');
-    card.classList.add('investment');
-  
-    card.innerHTML = `
-        <div class="investment-top">
-            <img src="${inv.image}" alt="${inv.name}" />
-            <div class="investment-info">
+  {
+    name: "Lemonade Stand",
+    description: "Start small. Squeeze every cent.",
+    image: "img/lemonade.png"
+  },
+  {
+    name: "Garage Sale Empire",
+    description: "Sell grandma’s junk for profit.",
+    image: "img/garage.png"
+  },
+  {
+    name: "Mom’s Basement Startup",
+    description: "Funded by ramen and ambition.",
+    image: "img/startup.png"
+  },
+  {
+    name: "Local Pizza Chain",
+    description: "Grease the wheels of commerce.",
+    image: "img/pizza.png"
+  },
+  {
+    name: "Neighborhood Crypto Miner",
+    description: "Melt GPUs for passive income.",
+    image: "img/crypto.png"
+  },
+  {
+    name: "Influencer Brand Deal Agency",
+    description: "Turn clout into cash.",
+    image: "img/influencer.png"
+  },
+  {
+    name: "Regional Fast Food Empire",
+    description: "Have it your way — everywhere.",
+    image: "img/fastfood.png"
+  },
+  {
+    name: "National Tech Conglomerate",
+    description: "Owns three apps and your data.",
+    image: "img/tech.png"
+  },
+  {
+    name: "Offshore Investment Scheme",
+    description: "Totally legit. Promise.",
+    image: "img/offshore.png"
+  },
+  {
+    name: "Artificial Intelligence Mega-Lab",
+    description: "Automate the world (and profits).",
+    image: "img/ai.png"
+  },
+  {
+    name: "World Bank Acquisition",
+    description: "Set the rates. Rule the game.",
+    image: "img/bank.png"
+  },
+  {
+    name: "Interplanetary Mining Corp",
+    description: "Mars has more than just dust.",
+    image: "img/marsmine.png"
+  },
+  {
+    name: "Time-Travel Real Estate Trust",
+    description: "Buy in 1890. Sell in 2200.",
+    image: "img/timetravel.png"
+  },
+  {
+    name: "Galactic Stock Exchange",
+    description: "Trade across the stars.",
+    image: "img/galaxy.png"
+  },
+  {
+    name: "Multiverse Monopoly Machine",
+    description: "Infinite selves. Infinite revenue.",
+    image: "img/multiverse.png"
+  },
+  {
+    name: "God Mode Capital",
+    description: "Owns everything. Clicks itself.",
+    image: "img/godmode.png"
+  }
+];
+
+const container = document.getElementById('investments');
+
+investments.forEach((inv, index) => {
+  const card = document.createElement('div');
+  card.classList.add('investment');
+
+  card.innerHTML = `
+      <div class="investment-top">
+          <img src="${inv.image}" alt="${inv.name}" />
+          <div class="investment-info">
             <p>${inv.name}</p>
             <small>${inv.description}</small>
-            </div>
-            <button class="investBtn">Invest</button>
-        </div>
-        <div class="progressBar"><div class="progressBarInner"></div></div>
-        `;
+          </div>
+          <button class="investBtn">Invest</button>
+      </div>
+      <div class="progressBar"><div class="progressBarInner"></div></div>
+      `;
 
-  
-    container.appendChild(card);
-  });
-  
-  let netWorth = 0;
+  container.appendChild(card);
+});
+
+let netWorth = 0;
 let clickPower = 1;
 let clickLevel = 0;
 let clickUpgradeCost = 20;
@@ -115,6 +114,11 @@ const clickPowerEl = document.getElementById('clickPower');
 const investBtn = document.getElementById('invest');
 const upgradeClickBtn = document.getElementById('upgradeClick');
 const critFeedback = document.getElementById('critFeedback');
+
+// 🔥 FIXED: Hide crit feedback after animation ends
+critFeedback.addEventListener('animationend', () => {
+  critFeedback.style.display = 'none';
+});
 
 // Update UI
 function updateUI() {
