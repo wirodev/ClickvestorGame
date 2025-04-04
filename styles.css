@@ -1,156 +1,208 @@
+/* ========== General Layout ========== */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#logo img {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+#box-1 {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+/* ========== Stats Panel ========== */
+#netInfo {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+#netInfo div {
+  margin-bottom: 10px;
+  padding: 8px;
+  background-color: #eee;
+  border-radius: 5px;
+}
+
+/* ========== Click Area ========== */
+#clickArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+/* 💰 Premium Dollar Button */
+#invest {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  font-size: 32px;
+  color: white;
+  cursor: pointer;
+  border: 4px solid #a37e2c;
+  background: linear-gradient(145deg, #006039, #00784e);
+  box-shadow: 
+    inset -2px -2px 4px rgba(255, 255, 255, 0.2),
+    inset 2px 2px 4px rgba(0, 0, 0, 0.3),
+    0 4px 10px rgba(0, 0, 0, 0.4),
+    0 0 10px #a37e2c;
+  transition: all 0.1s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shine overlay (glare) */
+#invest::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(120deg, rgba(255,255,255,0.3) 0%, transparent 60%);
+  transform: skewX(-20deg);
+  animation: shine 3s infinite;
+  pointer-events: none;
+}
+
+/* Press effect */
+#invest:active {
+  transform: scale(0.96);
+  box-shadow:
+    inset 2px 2px 6px rgba(0, 0, 0, 0.4),
+    0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Hover glow */
+#invest:hover {
+  box-shadow:
+    inset -2px -2px 4px rgba(255, 255, 255, 0.2),
+    inset 2px 2px 4px rgba(0, 0, 0, 0.3),
+    0 6px 14px rgba(0, 0, 0, 0.5),
+    0 0 12px #a37e2c;
+}
+
+/* Upgrade Button */
+#upgradeClick {
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  transition: 0.2s ease-in-out;
+}
+
+#upgradeClick:hover {
+  background-color: #f7f7f7;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* ========== Critical Click Feedback ========== */
+#critFeedback {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 28px;
+  font-weight: bold;
+  color: #a37e2c;
+  text-shadow: 
+    1px 1px 0 #000,
+    -1px 1px 0 #000,
+    1px -1px 0 #000,
+    -1px -1px 0 #000;
+  display: none;
+  pointer-events: none;
+  animation: fadeUp 1s ease-out;
+}
+
+
+@keyframes fadeUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  #logo img {
-    width: 200px;
-    margin-bottom: 20px;
+  100% {
+    opacity: 0;
+    transform: translateY(-40px);
   }
-  
-  #box-1 {
-    display: flex;
-    gap: 40px;
-    margin-bottom: 40px;
-  }
-  
-  #netInfo {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
-  }
-  
-  #netInfo div {
-    margin-bottom: 10px;
-    padding: 8px;
-    background-color: #eee;
-    border-radius: 5px;
-  }
-  
-  #clickArea {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  #invest {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    font-size: 32px;
-    background-color: green;
-    color: white;
-    border: 4px solid orange;
-    cursor: pointer;
-    position: relative;
-  }
-  
-  #upgradeClick {
-    padding: 10px 20px;
-    font-size: 14px;
-    cursor: pointer;
-  }
-  
-  #critFeedback {
-    position: absolute;
-    font-size: 24px;
-    color: gold;
-    font-weight: bold;
-    pointer-events: none;
-    user-select: none;
-    animation: fadeUp 1s ease-out;
-  }
-  
-  @keyframes fadeUp {
-    0% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0; transform: translateY(-40px); }
-  }
-  
-  /* NEW Investment Card Styling */
+}
+
+/* ========== Investment Cards ========== */
 .investment {
-    background-color: white;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 0 5px rgba(0,0,0,0.1);
-    width: 100%;
-    max-width: 600px;
-  }
-  
-  /* Top Row (Image + Info + Button) */
-  .investment-top {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 10px;
-  }
-  
-  .investment-top img {
-    width: 60px;
-    height: 60px;
-    border-radius: 6px;
-    object-fit: cover;
-    background-color: #ccc;
-  }
-  
-  .investment-info {
-    flex-grow: 1;
-  }
-  
-  .investment-info p {
-    font-weight: bold;
-    margin: 0;
-  }
-  
-  .investment-info small {
-    font-size: 12px;
-    color: #555;
-  }
-  
-  /* Button Styling */
-  .investment-top button {
-    padding: 6px 12px;
-    font-size: 14px;
-    cursor: pointer;
-  }
-  
-  /* Progress Bar */
-  .progressBar {
-    width: 100%;
-    height: 20px;
-    background-color: #ddd;
-    border-radius: 10px;
-    overflow: hidden;
-    position: relative;
-  }
-  
-  .progressBarInner {
-    background-color: green;
-    height: 100%;
-    width: 0%;
-    transition: width 0.3s;
-  }
-  
-  /* Critical Click Feedback */
-  #critFeedback {
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 28px;
-    color: gold;
-    font-weight: bold;
-    display: none;
-    pointer-events: none;
-    animation: fadeUp 1s ease-out;
-  }
-  
+  background-color: white;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+}
+
+.investment-top {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+.investment-top img {
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  object-fit: cover;
+  background-color: #ccc;
+}
+
+.investment-info {
+  flex-grow: 1;
+}
+
+.investment-info p {
+  font-weight: bold;
+  margin: 0;
+}
+
+.investment-info small {
+  font-size: 12px;
+  color: #555;
+}
+
+.investment-top button {
+  padding: 6px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ========== Progress Bar ========== */
+.progressBar {
+  width: 100%;
+  height: 20px;
+  background-color: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progressBarInner {
+  background-color: green;
+  height: 100%;
+  width: 0%;
+  transition: width 0.3s;
+}
