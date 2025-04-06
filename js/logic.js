@@ -1,10 +1,15 @@
-// Controller Logic
+// ===============================
+// Game State & Config
+// ===============================
 let netWorth = 0;
 let clickPower = 1;
 let clickLevel = 0;
 let clickUpgradeCost = 20;
 const upgradeFactor = 1.3;
 
+// ===============================
+// UI Elements
+// ===============================
 const netWorthEl = document.getElementById('netWorth');
 const passiveIncomeEl = document.getElementById('passiveIncome');
 const clickPowerEl = document.getElementById('clickPower');
@@ -12,14 +17,17 @@ const investBtn = document.getElementById('invest');
 const upgradeClickBtn = document.getElementById('upgradeClick');
 const critFeedback = document.getElementById('critFeedback');
 
-// Update all UI panels
+// ===============================
+// Update UI
+// ===============================
 function updateUI() {
   netWorthEl.textContent = `Net Worth: $${Math.floor(netWorth)}`;
   clickPowerEl.textContent = `Click Power: $${clickPower}`;
   upgradeClickBtn.textContent = `Upgrade Click Power ($${clickUpgradeCost})`;
+  passiveIncomeEl.textContent = `Income: $${calculatePassiveIncome().toFixed(2)} /s`;
 
-  // Enable/disable investment buttons based on netWorth
-  document.querySelectorAll('.investment').forEach(card => {
+  // Enable/disable investments
+  document.querySelectorAll('.investment').forEach((card) => {
     const index = parseInt(card.getAttribute('data-index'));
     const inv = investments[index];
     const btn = card.querySelector('.investBtn');
@@ -27,40 +35,44 @@ function updateUI() {
   });
 }
 
-// Handle dollar click
+// ===============================
+// Click for Money + Crit
+// ===============================
 function handleClick() {
-  let crit = 1;
-  let critText = '';
+  let critMultiplier = 1;
+  let critLabel = '';
 
   const roll = Math.random();
   if (roll < 0.02) {
-    crit = 10;
-    critText = 'x10!';
+    critMultiplier = 10;
+    critLabel = 'x10!';
   } else if (roll < 0.12) {
-    crit = 2;
-    critText = 'x2!';
+    critMultiplier = 2;
+    critLabel = 'x2!';
   }
 
-  const earned = clickPower * crit;
+  const earned = clickPower * critMultiplier;
   netWorth += earned;
 
-  if (crit > 1) {
-    critFeedback.textContent = critText;
+  if (critMultiplier > 1) {
+    critFeedback.textContent = critLabel;
     critFeedback.style.display = 'block';
     critFeedback.style.animation = 'none';
-    critFeedback.offsetHeight;
+    critFeedback.offsetHeight; // trigger reflow
     critFeedback.style.animation = 'fadeUp 1s ease-out';
   }
 
   updateUI();
 }
 
-// Reset crit feedback when animation ends
+// Hide crit label after animation ends
 critFeedback.addEventListener('animationend', () => {
   critFeedback.style.display = 'none';
 });
 
-// Upgrade click power
+// ===============================
+// Upgrade Click Power
+// ===============================
 function handleClickUpgrade() {
   if (netWorth >= clickUpgradeCost) {
     netWorth -= clickUpgradeCost;
@@ -71,51 +83,65 @@ function handleClickUpgrade() {
   }
 }
 
+// ===============================
+// Investment Logic
+// ===============================
 function setupInvestmentLogic() {
-    document.querySelectorAll('.investment').forEach((card, index) => {
-      const investBtn = card.querySelector('.investBtn');
-      const progressInner = card.querySelector('.progressBarInner');
-      const inv = investments[index];
-  
-      // Buy or upgrade investment
-      investBtn.addEventListener('click', () => {
-        if (netWorth >= inv.upgradeCost) {
-          netWorth -= inv.upgradeCost;
-          inv.level++;
-          inv.upgradeCost = Math.floor(inv.upgradeCost * 1.15); // Scale upgrade cost
-          investBtn.textContent = `Invest ($${inv.upgradeCost})`;
-          inv.active = true;
-  
-          updateUI();
+  document.querySelectorAll('.investment').forEach((card, index) => {
+    const investBtn = card.querySelector('.investBtn');
+    const progressInner = card.querySelector('.progressBarInner');
+    const inv = investments[index];
+
+    investBtn.addEventListener('click', () => {
+      if (netWorth >= inv.upgradeCost) {
+        netWorth -= inv.upgradeCost;
+        inv.level++;
+        inv.upgradeCost = Math.floor(inv.upgradeCost * 1.15);
+        investBtn.textContent = `Invest ($${inv.upgradeCost})`;
+        inv.active = true;
+
+        // Start progress bar loop once
+        if (!inv.timer) {
+          startPayoutLoop(inv, progressInner);
         }
-      });
-  
-      // Start payout loop
-      function payoutLoop() {
-        if (!inv.active || inv.level <= 0) return;
-  
-        let elapsed = 0;
-        const intervalMS = inv.interval * 1000;
-  
-        const interval = setInterval(() => {
-          if (!inv.active) {
-            clearInterval(interval);
-            return;
-          }
-  
-          elapsed += 100;
-          const percent = Math.min((elapsed / intervalMS) * 100, 100);
-          progressInner.style.width = percent + "%";
-  
-          if (elapsed >= intervalMS) {
-            netWorth += inv.payout * inv.level;
-            elapsed = 0;
-            updateUI();
-          }
-        }, 100);
+
+        updateUI();
       }
-  
-      payoutLoop(); // Start each one
     });
-  }
-  
+  });
+}
+
+// ===============================
+// Payout Loop + Animation
+// ===============================
+function startPayoutLoop(inv, progressInner) {
+  const intervalMS = inv.interval * 1000;
+  let elapsed = 0;
+
+  inv.timer = setInterval(() => {
+    if (!inv.active || inv.level <= 0) return;
+
+    elapsed += 100;
+    const percent = Math.min((elapsed / intervalMS) * 100, 100);
+    progressInner.style.width = percent + "%";
+
+    if (elapsed >= intervalMS) {
+      const income = inv.payout * inv.level;
+      netWorth += income;
+      elapsed = 0;
+      updateUI();
+    }
+  }, 100);
+}
+
+// ===============================
+// Total Passive Income /s
+// ===============================
+function calculatePassiveIncome() {
+  return investments.reduce((sum, inv) => {
+    if (inv.level > 0) {
+      return sum + (inv.payout / inv.interval) * inv.level;
+    }
+    return sum;
+  }, 0);
+}

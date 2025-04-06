@@ -260,8 +260,21 @@ body {
 }
 
 .progressBarInner {
-  background-color: var(--color-bar-fill);
   height: 100%;
   width: 0%;
-  transition: width 0.25s ease;
+  transition: width 0.25s linear;
+  background: repeating-linear-gradient(
+    135deg,
+    #006039,
+    #006039 10px,
+    #a37e2c 10px,
+    #a37e2c 20px
+  );
+  /*animation: stripeFlow 2s linear infinite;*/
 }
+/*
+@keyframes stripeFlow {
+  from { background-position: 0 0; }
+  to { background-position: 40px 0; }
+}*/
+
