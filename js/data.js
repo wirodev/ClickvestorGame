@@ -3,7 +3,7 @@ const investments = [
     {
       name: "Lemonade Stand",
       description: "Start small. Squeeze every cent.",
-      image: "img/lemonade.png",
+      image: "img/lemonade.jpg",
       initialCost: 50,
       upgradeCost: 58,
       payout: 5,
@@ -15,7 +15,7 @@ const investments = [
     },
     {
       name: "Garage Sale Empire",
-      description: "Sell grandma’s junk for profit.",
+      description: "Sell grandma's junk for profit.",
       image: "img/garage.png",
       initialCost: 75,
       upgradeCost: 86,

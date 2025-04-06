@@ -26,6 +26,11 @@
 body {
   font-family: Arial, sans-serif;
   background-color: var(--color-bg-main);
+  background-image: url('../img/bg-dollar-icon.png');
+  background-repeat: repeat;
+  background-size: 80px;
+  background-position: center;
+  color: white;
   margin: 0;
   padding: 20px;
   display: flex;
