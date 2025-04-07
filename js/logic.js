@@ -15,6 +15,7 @@ const passiveIncomeEl = document.getElementById('passiveIncome');
 const clickPowerEl = document.getElementById('clickPower');
 const investBtn = document.getElementById('invest');
 const upgradeClickBtn = document.getElementById('upgradeClick');
+const upgradeClickCostEl = document.getElementById('upgradeClickCost');
 const critFeedback = document.getElementById('critFeedback');
 
 // ===============================
@@ -23,20 +24,25 @@ const critFeedback = document.getElementById('critFeedback');
 function updateUI() {
   netWorthEl.textContent = `Net Worth: $${Math.floor(netWorth)}`;
   clickPowerEl.textContent = `Click Power: $${clickPower}`;
-  upgradeClickBtn.textContent = `Upgrade Click Power ($${clickUpgradeCost})`;
+  upgradeClickCostEl.textContent = `($${clickUpgradeCost})`;
   passiveIncomeEl.textContent = `Income: $${calculatePassiveIncome().toFixed(2)} /s`;
 
-  // Enable/disable investments
   document.querySelectorAll('.investment').forEach((card) => {
     const index = parseInt(card.getAttribute('data-index'));
     const inv = investments[index];
-    const btn = card.querySelector('.investBtn');
-    btn.disabled = netWorth < inv.unlockAt;
+
+    const investBtn = card.querySelector('.investBtn');
+    const sharesEl = card.querySelector('.shares');
+    const intervalEl = card.querySelector('.interval');
+
+    investBtn.disabled = netWorth < inv.initialCost;
+    sharesEl.textContent = `Shares: ${inv.shares}`;
+    intervalEl.textContent = `Time: ${calculateAdjustedInterval(inv).toFixed(1)}s`;
   });
 }
 
 // ===============================
-// Click for Money + Crit
+// Handle Dollar Click
 // ===============================
 function handleClick() {
   let critMultiplier = 1;
@@ -58,14 +64,13 @@ function handleClick() {
     critFeedback.textContent = critLabel;
     critFeedback.style.display = 'block';
     critFeedback.style.animation = 'none';
-    critFeedback.offsetHeight; // trigger reflow
+    critFeedback.offsetHeight;
     critFeedback.style.animation = 'fadeUp 1s ease-out';
   }
 
   updateUI();
 }
 
-// Hide crit label after animation ends
 critFeedback.addEventListener('animationend', () => {
   critFeedback.style.display = 'none';
 });
@@ -84,54 +89,92 @@ function handleClickUpgrade() {
 }
 
 // ===============================
-// Investment Logic
+// Setup Investment Buttons
 // ===============================
 function setupInvestmentLogic() {
   document.querySelectorAll('.investment').forEach((card, index) => {
-    const investBtn = card.querySelector('.investBtn');
-    const progressInner = card.querySelector('.progressBarInner');
     const inv = investments[index];
+    const investBtn = card.querySelector('.investBtn');
+    const startBtn = card.querySelector('.startBtn');
+    const autoBtn = card.querySelector('.autoBtn');
+    const progressInner = card.querySelector('.progressBarInner');
 
+    // Buy Shares
     investBtn.addEventListener('click', () => {
-      if (netWorth >= inv.upgradeCost) {
-        netWorth -= inv.upgradeCost;
-        inv.level++;
-        inv.upgradeCost = Math.floor(inv.upgradeCost * 1.15);
-        investBtn.textContent = `Invest ($${inv.upgradeCost})`;
-        inv.active = true;
-
-        // Start progress bar loop once
-        if (!inv.timer) {
-          startPayoutLoop(inv, progressInner);
-        }
-
+      if (netWorth >= inv.initialCost) {
+        netWorth -= inv.initialCost;
+        inv.shares += 1;
+        inv.initialCost = Math.floor(inv.initialCost * 1.15);
+        investBtn.textContent = `Invest ($${inv.initialCost})`;
         updateUI();
       }
     });
+
+    // Manual Start
+    startBtn.addEventListener('click', () => {
+      if (!inv.isAutomated && inv.shares > 0 && !inv.timer) {
+        runPayoutLoop(inv, progressInner);
+      }
+    });
+
+    // Automate
+    autoBtn.addEventListener('click', () => {
+      inv.isAutomated = true;
+      if (!inv.timer) {
+        runPayoutLoop(inv, progressInner);
+      }
+    });
+
+    // Start loop if already automated
+    if (inv.isAutomated && inv.shares > 0) {
+      runPayoutLoop(inv, progressInner);
+    }
   });
 }
 
 // ===============================
-// Payout Loop + Animation
+// Run Progress Bar and Payout Loop
 // ===============================
-function startPayoutLoop(inv, progressInner) {
-  const intervalMS = inv.interval * 1000;
+function runPayoutLoop(inv, progressInner) {
   let elapsed = 0;
+  const tick = 100;
 
-  inv.timer = setInterval(() => {
-    if (!inv.active || inv.level <= 0) return;
+  const step = () => {
+    if (inv.shares <= 0 || (!inv.isAutomated && elapsed === 0)) {
+      inv.timer = 0;
+      progressInner.style.width = "0%";
+      return;
+    }
 
-    elapsed += 100;
+    elapsed += tick;
+    const intervalMS = calculateAdjustedInterval(inv) * 1000;
     const percent = Math.min((elapsed / intervalMS) * 100, 100);
     progressInner.style.width = percent + "%";
 
     if (elapsed >= intervalMS) {
-      const income = inv.payout * inv.level;
+      const income = inv.payout * inv.shares;
       netWorth += income;
       elapsed = 0;
       updateUI();
+
+      if (!inv.isAutomated) {
+        inv.timer = 0;
+        progressInner.style.width = "0%";
+        return;
+      }
     }
-  }, 100);
+
+    inv.timer = setTimeout(step, tick);
+  };
+
+  step();
+}
+
+// ===============================
+// Adjusted Interval (based on shares)
+// ===============================
+function calculateAdjustedInterval(inv) {
+  return inv.interval / (1 + inv.shares * 0.05);
 }
 
 // ===============================
@@ -139,8 +182,8 @@ function startPayoutLoop(inv, progressInner) {
 // ===============================
 function calculatePassiveIncome() {
   return investments.reduce((sum, inv) => {
-    if (inv.level > 0) {
-      return sum + (inv.payout / inv.interval) * inv.level;
+    if (inv.shares > 0 && inv.isAutomated) {
+      return sum + ((inv.payout * inv.shares) / calculateAdjustedInterval(inv));
     }
     return sum;
   }, 0);
