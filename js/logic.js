@@ -6,7 +6,7 @@ let netWorth = 0;
 let clickPower = 1;
 let clickLevel = 0;
 let clickUpgradeCost = 2;
-const clickPowerIncrease = 1.1;
+const clickPowerIncrease = 1.3;
 
 // ===============================
 // UI Elements
@@ -112,8 +112,8 @@ function setupInvestmentLogic() {
     });
 
     employBtn.addEventListener('click', () => {
-      if (!inv.isAutomated && inv.shares > 0 && !inv.timer) {
-        runPayoutLoop(inv, progressInner);
+      if (inv.shares > 0 && inv.timer === 0) {
+        runPayoutLoop(inv, progressInner, false);
       }
     });
 
@@ -122,14 +122,14 @@ function setupInvestmentLogic() {
         netWorth -= inv.automationCost;
         inv.isAutomated = true;
         if (!inv.timer) {
-          runPayoutLoop(inv, progressInner);
+          runPayoutLoop(inv, progressInner, true);
         }
         updateUI();
       }
     });
 
     if (inv.isAutomated && inv.shares > 0 && !inv.timer) {
-      runPayoutLoop(inv, progressInner);
+      runPayoutLoop(inv, progressInner, true);
     }
   });
 }
@@ -137,12 +137,12 @@ function setupInvestmentLogic() {
 // ===============================
 // Payout Loop Handler
 // ===============================
-function runPayoutLoop(inv, progressInner) {
+function runPayoutLoop(inv, progressInner, auto = false) {
   let elapsed = 0;
   const tick = 100;
 
   const step = () => {
-    if (inv.shares <= 0 || (!inv.isAutomated && elapsed === 0)) {
+    if (inv.shares <= 0 || (!inv.isAutomated && elapsed === 0 && auto)) {
       inv.timer = 0;
       progressInner.style.width = "0%";
       return;
@@ -158,7 +158,8 @@ function runPayoutLoop(inv, progressInner) {
       elapsed = 0;
       updateUI();
 
-      if (!inv.isAutomated) {
+      if (!auto) {
+        clearTimeout(inv.timer);
         inv.timer = 0;
         progressInner.style.width = "0%";
         return;
