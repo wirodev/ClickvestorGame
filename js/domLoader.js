@@ -1,5 +1,9 @@
 
 // View: Builds the investment cards from the updated model
+function formatMoney(value) {
+  return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+}
+
 function renderInvestments(containerId) {
   const container = document.getElementById(containerId);
   container.innerHTML = '';
@@ -19,14 +23,14 @@ function renderInvestments(containerId) {
           <div class="investment-meta">
             <span class="shares">Shares: ${inv.shares}</span><br>
             <span class="interval">Time: ${inv.interval.toFixed(1)}s</span><br>
-            <span class="payout">Payout: $${inv.payout.toFixed(2)}</span>
+            <span class="payout">Payout: $${formatMoney(inv.payout)}</span>
           </div>
         </div>
 
         <div class="investment-actions">
           <button class="startBtn styleUpgradeBtn">Get Payout</button><br>
-          <button class="investBtn styleUpgradeBtn" disabled>Buy Shares ($${inv.baseCost})</button><br>
-          <button class="autoBtn styleUpgradeBtn">Hire Manager ($${inv.automationCost})</button>
+          <button class="investBtn styleUpgradeBtn" disabled>Buy Shares ($${formatMoney(inv.baseCost)})</button><br>
+<button class="autoBtn styleUpgradeBtn">Hire Manager ($${formatMoney(inv.automationCost)})</button>
         </div>
       </div>
 

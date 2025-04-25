@@ -6,7 +6,11 @@ let netWorth = 0;
 let clickPower = 1;
 let clickLevel = 0;
 let clickUpgradeCost = 2;
-const clickPowerIncrease = 1.3;
+const clickPowerIncrease = 1.5;
+
+function formatMoney(value) {
+  return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+}
 
 // ===============================
 // UI Elements
@@ -23,10 +27,11 @@ const critFeedback = document.getElementById('critFeedback');
 // Update UI
 // ===============================
 function updateUI() {
-  netWorthEl.textContent = `Net Worth: $${Math.floor(netWorth)}`;
-  clickPowerEl.textContent = `Click Power: $${clickPower.toFixed(2)}`;
-  upgradeClickCostEl.textContent = `($${clickUpgradeCost})`;
-  passiveIncomeEl.textContent = `Income: $${calculatePassiveIncome().toFixed(2)} /s`;
+  netWorthEl.textContent = `Net Worth: $${formatMoney(netWorth)}`;
+  clickPowerEl.textContent = `Click Power: $${formatMoney(clickPower)}`;
+  upgradeClickCostEl.textContent = `($${formatMoney(clickUpgradeCost)})`;
+  passiveIncomeEl.textContent = `Income: $${formatMoney(calculatePassiveIncome())} /s`;
+
 
   document.querySelectorAll('.investment').forEach((card) => {
     const index = parseInt(card.getAttribute('data-index'));
@@ -39,7 +44,7 @@ function updateUI() {
     investBtn.disabled = netWorth < inv.baseCost || (inv.requiresPrevious && !investments[index - 1].shares);
     sharesEl.textContent = `Shares: ${inv.shares}`;
     intervalEl.textContent = `Time: ${calculateAdjustedInterval(inv).toFixed(1)}s`;
-    payoutEl.textContent = `Payout: $${calculateAdjustedPayout(inv).toFixed(2)}`;
+    payoutEl.textContent = `Payout: $${formatMoney(calculateAdjustedPayout(inv))}`;
   });
 }
 
@@ -106,7 +111,7 @@ function setupInvestmentLogic() {
         netWorth -= inv.baseCost;
         inv.shares++;
         inv.baseCost = Math.ceil(inv.baseCost * 1.15);
-        investBtn.textContent = `Invest ($${inv.baseCost})`;
+        investBtn.textContent = `Invest ($${formatMoney(inv.baseCost)})`;
         updateUI();
       }
     });
