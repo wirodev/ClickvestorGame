@@ -6,7 +6,7 @@ let netWorth = 0;
 let clickPower = 1;
 let clickLevel = 0;
 let clickUpgradeCost = 2;
-const clickPowerIncrease = 1.5;
+const clickPowerIncrease = 1.2;
 
 function formatMoney(value) {
   return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
@@ -90,7 +90,7 @@ function handleClickUpgrade() {
     netWorth -= clickUpgradeCost;
     clickLevel++;
     clickPower = +(clickPower * clickPowerIncrease).toFixed(2);
-    clickUpgradeCost = Math.ceil(clickUpgradeCost * 1.05);
+    clickUpgradeCost = Math.ceil(clickUpgradeCost * 1.2);
     updateUI();
   }
 }
