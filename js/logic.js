@@ -29,7 +29,7 @@ const critFeedback = document.getElementById('critFeedback');
 function updateUI() {
   netWorthEl.textContent = `Net Worth: $${formatMoney(netWorth)}`;
   clickPowerEl.textContent = `Click Power: $${formatMoney(clickPower)}`;
-  upgradeClickCostEl.textContent = `($${formatMoney(clickUpgradeCost)})`;
+  upgradeClickCostEl.textContent = `$${formatMoney(clickUpgradeCost)}`;
   passiveIncomeEl.textContent = `Income: $${formatMoney(calculatePassiveIncome())} /s`;
 
 
