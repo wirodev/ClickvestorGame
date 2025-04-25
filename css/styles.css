@@ -248,6 +248,10 @@ body {
   box-shadow: 0 1px 0 #003a20;
 }
 
+.styleUpgradeBtn {
+  margin-bottom: 0.7rem;
+}
+
 /* ========== Progress Bar ========== */
 .progressBar {
   width: 100%;

@@ -2,7 +2,7 @@ const investments = [
   {
     "name": "Lemonade Stand",
     "description": "Start small. Squeeze every cent.",
-    "image": "img/lemonadestand.png",
+    "image": "img/lemonade.png",
     "baseCost": 5,
     "payout": 1.25,
     "interval": 3.0,
@@ -15,9 +15,9 @@ const investments = [
     "active": false
   },
   {
-    "name": "Garage Sale Empire",
+    "name": "Garage Sale",
     "description": "Sell grandma's junk for profit.",
-    "image": "img/garagesaleempire.png",
+    "image": "img/garagesale.png",
     "baseCost": 9,
     "payout": 2.25,
     "interval": 3.5,
@@ -122,7 +122,7 @@ const investments = [
   {
     "name": "Offshore Investment Scheme",
     "description": "Totally legit. Promise.",
-    "image": "img/offshoreinvestmentscheme.png",
+    "image": "img/offshoreinvestmentscheme.jpg",
     "baseCost": 440,
     "payout": 110.0,
     "interval": 35.0,
@@ -135,9 +135,9 @@ const investments = [
     "active": false
   },
   {
-    "name": "Artificial Intelligence Mega-Lab",
+    "name": "Artificial Intelligence Lab",
     "description": "Automate the world (and profits).",
-    "image": "img/artificialintelligencemega-lab.png",
+    "image": "img/artificialintelligencelab.png",
     "baseCost": 770,
     "payout": 192.5,
     "interval": 43.5,
@@ -182,7 +182,7 @@ const investments = [
   {
     "name": "Time-Travel Real Estate Trust",
     "description": "Buy in 1890. Sell in 2200.",
-    "image": "img/time-travelrealestatetrust.png",
+    "image": "img/timetravelrealestatetrust.png",
     "baseCost": 4125,
     "payout": 1031.25,
     "interval": 75.0,
