@@ -90,7 +90,7 @@ function handleClickUpgrade() {
     netWorth -= clickUpgradeCost;
     clickLevel++;
     clickPower = +(clickPower * clickPowerIncrease).toFixed(2);
-    clickUpgradeCost = Math.ceil(clickUpgradeCost * 1.5);
+    clickUpgradeCost = Math.ceil(clickUpgradeCost * 1.05);
     updateUI();
   }
 }
